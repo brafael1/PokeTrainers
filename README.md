@@ -48,7 +48,6 @@ did you mean: ash
 ## Requirements
 
 - A terminal with truecolor (24-bit) support.
-- For the animated variant of a trainer, use the plain name (e.g. `ash`).
 
 ## Installation
 
