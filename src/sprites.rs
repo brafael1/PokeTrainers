@@ -2,7 +2,6 @@ use image::{DynamicImage, GenericImage};
 
 use crate::trainer::Trainer;
 
-/// Combines several trainer sprites into one by stitching them horizontally.
 pub fn combine(trainers: &[Trainer]) -> DynamicImage {
     let mut width: u32 = 0;
     let mut height: u32 = 0;

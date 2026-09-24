@@ -1,5 +1,3 @@
-//! Display pokemon trainer sprites in your terminal.
-
 use clap::Parser;
 use poketrainers::cli::Args;
 use poketrainers::list::List;

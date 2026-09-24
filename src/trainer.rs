@@ -5,22 +5,13 @@ use showie::Trim;
 
 use crate::{list::List, Data};
 
-/// A concrete Pokemon trainer, loaded from the embedded sprites.
 pub struct Trainer {
-    /// The path of the sprite inside the embedded data. Eg. `ash.png`.
     pub path: String,
-
-    /// The formatted display name of the trainer.
     pub name: String,
-
-    /// The sprite of the trainer, as a [`DynamicImage`].
     pub sprite: DynamicImage,
 }
 
 impl Trainer {
-    /// Creates a new trainer from a raw CLI argument, or "random".
-    ///
-    /// `scale` resizes the sprite after trimming (1.0 keeps it as-is).
     pub fn new(arg: String, list: &List, scale: f32) -> Self {
         if arg.eq_ignore_ascii_case("random") {
             return Self::load(list.random().to_owned(), list, scale);
@@ -37,7 +28,6 @@ impl Trainer {
         Self::load(cleaned, list, scale)
     }
 
-    /// Loads the sprite for an exact filename and formats its display name.
     fn load(name: String, list: &List, scale: f32) -> Self {
         let path = format!("{name}.png");
 
@@ -60,10 +50,6 @@ impl Trainer {
     }
 }
 
-/// Resizes a sprite by `scale`, skipping work when it's ~1.0.
-///
-/// Uses the nearest-neighbor filter, which keeps pixel art crisp by not
-/// blending colors together when shrinking.
 fn downscale(sprite: DynamicImage, scale: f32) -> DynamicImage {
     let scale = scale.clamp(0.1, 4.0);
 
@@ -77,8 +63,6 @@ fn downscale(sprite: DynamicImage, scale: f32) -> DynamicImage {
     sprite.resize(width, height, FilterType::Nearest)
 }
 
-/// Sanitizes user input into a sprite filename, mirroring how the files are
-/// named. Eg. `MR. Mime` -> `mr-mime`.
 fn sanitize(name: &str) -> String {
     name.to_lowercase()
         .replace([' ', '_'], "-")
@@ -87,7 +71,6 @@ fn sanitize(name: &str) -> String {
         .to_owned()
 }
 
-/// Prints close matches when a trainer isn't found.
 fn suggest(input: &str, list: &List) {
     let mut close: Vec<&String> = list
         .iter()
@@ -115,7 +98,6 @@ fn suggest(input: &str, list: &List) {
     }
 }
 
-/// The Levenshtein distance between two strings (trainer names are ASCII).
 fn levenshtein(a: &str, b: &str) -> usize {
     let a: Vec<char> = a.chars().collect();
     let b: Vec<char> = b.chars().collect();
@@ -127,9 +109,9 @@ fn levenshtein(a: &str, b: &str) -> usize {
         curr[0] = i + 1;
 
         for (j, cb) in b.iter().enumerate() {
-            curr[j + 1] = (prev[j + 1] + 1) // deletion
-                .min(curr[j] + 1) // insertion
-                .min(prev[j] + usize::from(ca != cb)); // substitution
+            curr[j + 1] = (prev[j + 1] + 1)
+                .min(curr[j] + 1)
+                .min(prev[j] + usize::from(ca != cb));
         }
 
         std::mem::swap(&mut prev, &mut curr);
