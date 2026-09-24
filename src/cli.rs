@@ -13,4 +13,8 @@ pub struct Args {
     /// List all available trainers and exit.
     #[arg(long, default_value_t = false)]
     pub list: bool,
+
+    /// Scale factor for the sprite (eg. 0.5 is half size, 1.0 is full).
+    #[arg(short, long, default_value_t = 0.75)]
+    pub scale: f32,
 }

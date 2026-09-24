@@ -1,6 +1,6 @@
 use std::process::exit;
 
-use image::DynamicImage;
+use image::{imageops::FilterType, DynamicImage};
 use showie::Trim;
 
 use crate::{list::List, Data};
@@ -19,9 +19,11 @@ pub struct Trainer {
 
 impl Trainer {
     /// Creates a new trainer from a raw CLI argument, or "random".
-    pub fn new(arg: String, list: &List) -> Self {
+    ///
+    /// `scale` resizes the sprite after trimming (1.0 keeps it as-is).
+    pub fn new(arg: String, list: &List, scale: f32) -> Self {
         if arg.eq_ignore_ascii_case("random") {
-            return Self::load(list.random().to_owned(), list);
+            return Self::load(list.random().to_owned(), list, scale);
         }
 
         let cleaned = sanitize(&arg);
@@ -32,11 +34,11 @@ impl Trainer {
             exit(1);
         }
 
-        Self::load(cleaned, list)
+        Self::load(cleaned, list, scale)
     }
 
     /// Loads the sprite for an exact filename and formats its display name.
-    fn load(name: String, list: &List) -> Self {
+    fn load(name: String, list: &List, scale: f32) -> Self {
         let path = format!("{name}.png");
 
         let bytes = Data::get(&path)
@@ -48,6 +50,7 @@ impl Trainer {
             .into_owned();
 
         let sprite = image::load_from_memory(&bytes).unwrap().trim();
+        let sprite = downscale(sprite, scale);
 
         Self {
             path,
@@ -55,6 +58,23 @@ impl Trainer {
             sprite,
         }
     }
+}
+
+/// Resizes a sprite by `scale`, skipping work when it's ~1.0.
+///
+/// Uses the triangle filter (linear) which averages pixels, keeping the pixel
+/// art sharp when shrinking instead of dropping random pixels.
+fn downscale(sprite: DynamicImage, scale: f32) -> DynamicImage {
+    let scale = scale.clamp(0.1, 4.0);
+
+    if (scale - 1.0).abs() < f32::EPSILON {
+        return sprite;
+    }
+
+    let width = ((sprite.width() as f32) * scale).round().max(1.0) as u32;
+    let height = ((sprite.height() as f32) * scale).round().max(1.0) as u32;
+
+    sprite.resize(width, height, FilterType::Triangle)
 }
 
 /// Sanitizes user input into a sprite filename, mirroring how the files are

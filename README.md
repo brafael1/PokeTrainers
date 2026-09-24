@@ -22,6 +22,7 @@ poketrainers red ash lance cynthia  # several at once
 poketrainers allister-unmasked      # variant names work too
 poketrainers --hide-name blue       # omit the name printed above
 poketrainers random                 # a random trainer
+poketrainers --scale 0.5 red        # smaller sprite (default: 0.75)
 poketrainers --list | grep gen1     # find all available names
 ```
 

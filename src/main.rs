@@ -28,7 +28,7 @@ fn main() {
     let trainers: Vec<Trainer> = args
         .trainer
         .into_iter()
-        .map(|arg| Trainer::new(arg, &list))
+        .map(|arg| Trainer::new(arg, &list, args.scale))
         .collect();
 
     let combined = sprites::combine(&trainers);
