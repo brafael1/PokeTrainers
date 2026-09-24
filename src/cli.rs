@@ -14,7 +14,9 @@ pub struct Args {
     #[arg(long, default_value_t = false)]
     pub list: bool,
 
-    /// Scale factor for the sprite (eg. 0.5 is half size, 1.0 is full).
-    #[arg(short, long, default_value_t = 0.75)]
+    /// Scale factor for the sprite (eg. 0.5 is half size, 1.0 is full size).
+    /// Values below 1.0 lose pixels, since each terminal cell can only hold
+    /// two colors.
+    #[arg(short, long, default_value_t = 1.0)]
     pub scale: f32,
 }
