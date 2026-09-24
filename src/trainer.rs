@@ -62,8 +62,8 @@ impl Trainer {
 
 /// Resizes a sprite by `scale`, skipping work when it's ~1.0.
 ///
-/// Uses the triangle filter (linear) which averages pixels, keeping the pixel
-/// art sharp when shrinking instead of dropping random pixels.
+/// Uses the nearest-neighbor filter, which keeps pixel art crisp by not
+/// blending colors together when shrinking.
 fn downscale(sprite: DynamicImage, scale: f32) -> DynamicImage {
     let scale = scale.clamp(0.1, 4.0);
 
@@ -74,7 +74,7 @@ fn downscale(sprite: DynamicImage, scale: f32) -> DynamicImage {
     let width = ((sprite.width() as f32) * scale).round().max(1.0) as u32;
     let height = ((sprite.height() as f32) * scale).round().max(1.0) as u32;
 
-    sprite.resize(width, height, FilterType::Triangle)
+    sprite.resize(width, height, FilterType::Nearest)
 }
 
 /// Sanitizes user input into a sprite filename, mirroring how the files are
