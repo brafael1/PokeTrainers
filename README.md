@@ -3,8 +3,7 @@
 Display Pokemon trainer sprites in your terminal.
 
 Inspired by (and adapted from) [pokeget-rs](https://github.com/talwat/pokeget-rs),
-but for the **1,500 trainer sprites** used by [Pokemon Showdown](https://play.pokemonshowdown.com/sprites/trainers/)
-instead of Pokemon sprites.
+but for the **1,500 trainer sprites** used by [Pokemon Showdown](https://play.pokemonshowdown.com/sprites/trainers/).
 
 # Preview
 <image src="https://github.com/brafael1/PokeTrainers/blob/main/wiki/preview.png?raw=true">
